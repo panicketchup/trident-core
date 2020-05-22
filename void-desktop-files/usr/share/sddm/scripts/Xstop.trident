@@ -9,11 +9,14 @@
 # This will need to be fixed later
 # ===============================
 
+# Use last to get the last user logged in and grep for that users homedir pipe to text.
 ulist=$(last | awk 'NR==1 {print $1}' | grep -f - /etc/passwd | cut -d":" -f6 | tee)
 
 if [ $? -ne '0' ] ; then
+	# Safety 
 	exit
 else
+	# No errors good. Finally unmount the dataset
 	umount -R ${ulist}
 	zfs unmount -f ${ulist}
 fi
